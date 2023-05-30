@@ -177,7 +177,7 @@ function setupGrid() {
     const disabled = i !== 0;
     const row = document.createElement('div');
     row.className = 'row';
-    row.addEventListener('keydown', handleRowKeyDown);
+    row.addEventListener('keyup', handleRowKeyDown);
     row.addEventListener('pointerdown', handleRowPointerDown);
     for (let j = 0; j < 5; j++) {
       const letterContainer = document.createElement('div');
