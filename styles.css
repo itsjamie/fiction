@@ -1,0 +1,116 @@
+:root {
+    --primary-color: #fef4eb;
+    --secondary-color: #231101;
+    --primary-button: #f99843;
+    --secondary-button: #3b1d02;
+    --accent: #f88a2a;
+    --input-border: #8b8a8b;
+    --input-focus-h: 245;
+    --input-focus-s: 100%;
+    --input-focus-l: 42%;
+    --correct-color: #8bc34a;
+    --wrong-color: #b71c1c;
+    --close-color: #fdd835;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    color: var(--primary-color);
+}
+
+body {
+    background-color: var(--secondary-color);
+}
+
+#game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.row {
+    flex: 0 1 auto;
+    display: flex;
+}
+
+.letter {
+    width: 75px;
+    height: 75px;
+    outline: 1px solid var(--accent);
+    font-size: 2.4rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: -1px -1px 0 var(--secondary-button), 1px -1px 0 var(--secondary-button), -1px 1px 0 var(--secondary-button), 1px 1px 0 var(--secondary-button);
+    background-color: var(--secondary-button);
+    border-radius: 4px;
+    color: var(--primary-color);
+    user-select: none;
+}
+
+.letter-container {
+    position: relative;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.letter-container.correct::before,
+.letter-container.close::before,
+.letter-container.wrong::before,
+.letter-container.lie-correct::after,
+.letter-container.lie-close::after,
+.letter-container.lie-wrong::after {
+    position: absolute;
+    top: 0.15rem;
+    font-size: 1rem;
+    color: white;
+    text-shadow: -1px -1px 0 var(--secondary-button), 1px -1px 0 var(--secondary-button), -1px 1px 0 var(--secondary-button), 1px 1px 0 var(--secondary-button);
+    padding: 1px 2px;
+    border-radius: 4px;
+    width: 1.3rem;
+    height: 1.5rem;
+}
+
+.letter-container.correct::before,
+.letter-container.close::before,
+.letter-container.wrong::before {
+    left: 0.15rem;
+}
+
+.letter-container.lie-correct::after,
+.letter-container.lie-close::after,
+.letter-container.lie-wrong::after {
+    right: 0.15rem;
+}
+
+.letter-container.correct::before,
+.letter-container.lie-correct::after {
+    content: "\2714"; /* checkmark */
+    background-color: var(--correct-color);
+}
+
+.letter-container.close::before,
+.letter-container.lie-close::after {
+    content: "~";
+    background-color: var(--close-color);
+}
+
+.letter-container.wrong::before,
+.letter-container.lie-wrong::after {
+    content: "x";
+    background-color: var(--wrong-color);
+}
