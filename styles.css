@@ -95,6 +95,7 @@ body {
 .letter-container.lie-close::after,
 .letter-container.lie-wrong::after {
     right: 0.15rem;
+    top: 3rem;
 }
 
 .letter-container.correct::before,
