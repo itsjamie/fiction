@@ -1,7 +1,5 @@
-const YELLOW_DIFFICULTY = 0;
-const RED_DIFFICULTY = 1;
-const difficulty = YELLOW_DIFFICULTY;
 let secretWord;
+let letterCounts;
 let timer;
 let timerDisplay;
 let timeRemaining = 600; // 10 minutes in seconds
@@ -84,13 +82,8 @@ function initializeGame() {
   setupForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const wordInput = event.target.elements[0]
-    if (difficulty == YELLOW_DIFFICULTY && duplicateLetters(wordInput.value)) {
-      wordInput.setCustomValidity('No duplicate letters! We\'re playing with yellow words.');
-      wordInput.reportValidity(false);
-    } else {
-      wordInput.setCustomValidity('');
-      wordInput.reportValidity(true);
-    }
+    wordInput.setCustomValidity('');
+    wordInput.reportValidity(true);
     
     const valid = event.target.checkValidity();
     if (!valid) {
@@ -98,23 +91,16 @@ function initializeGame() {
     }
     
     secretWord = wordInput.value.toLowerCase();
+    letterCounts = new Map();
+    const len = word.length;
+    for (let i = 0; i < len; i++) {
+      const letter = secretWord[i];
+      let count = letterCounts.get(letter) ?? 0;
+      letterCounts.set(letter, count + 1);
+    }
     
     setGameUI('guess');
   })
-}
-
-function duplicateLetters(word) {
-  const letters = new Set()
-  const len = word.length;
-  for (let i = 0; i < len; i++) {
-    const letter = word[i];
-    if (letters.has(letter)) {
-      return true;
-    } else {
-      letters.add(letter);
-    }
-  }
-  return false;
 }
 
 function handleRowKeyDown(event) {
@@ -198,16 +184,32 @@ function setupGrid() {
 function checkGuess(guess, inputs) {
   guess = guess.toLowerCase();
   guesses++;
+  guessed = new Set();
   for (let i = 0; i < guess.length; i++) {
     const letter = guess[i];
     const input = inputs[i];
     const isCorrect = letter === secretWord[i];
-    const isClose = !isCorrect && secretWord.includes(letter);
+    const isClose = !isCorrect && letterCounts.has(letter);
+    const onlyOne = letterCounts.get(letter) == 1
     let status;
     if (isCorrect) {
       status = 'correct';
     } else if (isClose) {
       status = 'close';
+      if (onlyOne){
+        if (guessed.has(letter)) {
+          status = 'wrong'
+        } else {
+          // Look ahead and see if there's any correct placements for this letter,
+          // if there is, then they will take priority, so this will be an X
+          for (let j = i + 1; j < guess.length; j++) {
+            if (guess[j] === letter && letter === secretWord[j]) {
+              status = 'wrong';
+              break;
+            }
+          }
+        }
+      }
     } else {
       status = 'wrong';
     }
@@ -215,6 +217,7 @@ function checkGuess(guess, inputs) {
     input.parentElement.classList.add(status);
     input.value = letter;
     input.disabled = true;
+    guessed.add(letter);
   }
 
   const nextGuess = inputs[0].parentElement.parentElement.nextElementSibling;
