@@ -92,7 +92,7 @@ function initializeGame() {
     
     secretWord = wordInput.value.toLowerCase();
     letterCounts = new Map();
-    const len = word.length;
+    const len = secretWord.length;
     for (let i = 0; i < len; i++) {
       const letter = secretWord[i];
       let count = letterCounts.get(letter) ?? 0;
